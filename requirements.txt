@@ -1,0 +1,6 @@
+aiomcache
+contextvars
+motor
+mongomock-motor
+pymongo
+pydantic

@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mongey"
+version = "0.1.1"
+authors = [{name = "Pavel Vorobyev", email = "aquavitale@yandex.ru"}]
+description = "asynchronous MongoDB ORM"
+requires-python = ">=3.11"
+
+dependencies = [
+    "aiomcache",
+    "contextvars",
+    "mongomock_motor",
+    "motor",
+    "pymongo",
+    "pydantic",
+]
+
+keywords = [
+    "pymongo",
+    "mongodb",
+    "motor",
+    "asyncio"
+]
+
+license = {text = "MIT"}
+readme = "README.md"
+
+[project.urls]
+Source = "https://github.com/viert/mongey"

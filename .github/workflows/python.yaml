@@ -1,0 +1,36 @@
+name: Build and Publish Python Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    container: "python:3.11.5"
+    runs-on: "ubuntu:latest"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: Install Dependencies
+        run: |
+          mkdir -p ~/.cache/pip
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install twine build
+      - name: Run Package Tests
+        run: |
+          python -m unittest mongey.tests
+      - name: Build Package
+        run: |
+          pyproject-build
+      - name: Publish Package
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          twine upload -u __token__ -p PYPI_TOKEN dist/*
