@@ -1,5 +1,5 @@
 import inspect
-from typing import List, Any, Dict, Callable, Type, Awaitable
+from typing import Generic, List, Any, Dict, Callable, Type, Awaitable
 from time import time
 from functools import wraps
 from mongey.errors import ObjectSaveRequired
@@ -24,16 +24,25 @@ def save_required(func: Callable[..., T]) -> Callable[..., T]:
     return wrapper
 
 
-class api_field:
+class api_field(Generic[RT]):
     """
     api_field is a decorator for model no-args methods (including async),
     allowing API users to access certain methods, i.e. implementing computed fields
     """
 
-    def __init__(self, fn):
+    fn: Callable[..., RT]
+
+    def __init__(self, fn: Callable[..., RT]):
         if not inspect.isfunction(fn):
             raise RuntimeError("only functions and methods can be decorated with api_field")
         self.fn = fn
+
+    def __call__(self, *args: Any, **kwds: Any) -> RT:
+        """
+        This method is never called, it is only meant to trick type checkers.
+        The actual handler is replaced with setattr in the __set_name__ method below
+        """
+        return self.fn(*args, **kwds)
 
     def __set_name__(self, owner, name):
         from .models.fields import ComputedField
@@ -52,7 +61,7 @@ class api_field:
         setattr(owner, name, self.fn)
 
 
-class model_cached_method:
+class model_cached_method(Generic[RT]):
     """
     model_cached_method decorates model methods. The wrapper provided
     generates a unique cache key out of
@@ -70,10 +79,17 @@ class model_cached_method:
     class property called _cached_methods: set. This allows StorableModel.invalidate
     method to invalidate these cached values along with other model-provided cache.
     """
-    orig_func: Callable[[TModel, ...], Awaitable[RT]] = None
+    orig_func: Callable[..., Awaitable[RT]]
 
-    def __init__(self, func: Callable[[TModel, ...], Awaitable[RT]]) -> None:
+    def __init__(self, func: Callable[..., Awaitable[RT]]) -> None:
         self.orig_func = func
+
+    def __call__(self, *args: Any, **kwds: Any) -> Awaitable[RT]:
+        """
+        This method is never called, it is only meant to trick type checkers.
+        The actual handler is replaced with setattr in the __set_name__ method below
+        """
+        return self.orig_func(*args, **kwds)
 
     def __set_name__(self, owner: Type[TModel], name: str) -> None:
 
