@@ -2,9 +2,6 @@
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages]
-find = {include = ["mongey"]}
-
 [project]
 name = "mongey"
 version = "0.1.8"
