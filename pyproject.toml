@@ -5,7 +5,7 @@ packages = {include = ["mongey"]}
 
 [project]
 name = "mongey"
-version = "0.1.5"
+version = "0.1.6"
 authors = [{name = "Pavel Vorobyev", email = "aquavitale@yandex.ru"}]
 description = "asynchronous MongoDB ORM"
 requires-python = ">=3.11"
