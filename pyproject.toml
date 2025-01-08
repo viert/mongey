@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mongey"
-version = "0.1.8"
+version = "0.1.9"
 authors = [{name = "Pavel Vorobyev", email = "aquavitale@yandex.ru"}]
 description = "asynchronous MongoDB ORM"
 requires-python = ">=3.11"
