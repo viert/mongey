@@ -7,7 +7,7 @@ find = {include = ["mongey"]}
 
 [project]
 name = "mongey"
-version = "0.1.7"
+version = "0.1.8"
 authors = [{name = "Pavel Vorobyev", email = "aquavitale@yandex.ru"}]
 description = "asynchronous MongoDB ORM"
 requires-python = ">=3.11"
